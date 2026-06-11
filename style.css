@@ -112,3 +112,130 @@ body {
        }
 }
 
+.nav-container {
+    padding: 20px;
+    background-color: white;
+}
+
+.nav-container ul{
+    justify-content: space-between;
+    display: flex;
+}
+
+.nav-container ul li {
+    display: inline-block;
+}
+
+.nav-container ul li a {
+    text-decoration: none;
+}
+
+.nav-container .heading {
+    font-size: 22px;
+    font-weight: bolder;
+    letter-spacing: 1px;
+}
+
+.wrapper {
+    text-align: center;
+    padding: 60px 30px;
+    background-image: url(./imgs/bg-left.png), url(./imgs/bg-right.png);
+    background-size: 393px auto;
+    background-position: calc(50% - 600px)0, calc(50% + 600px) 0;
+    background-repeat: repeat-y;
+    background-color: #f6f6f7;
+}
+
+.wrapper .head {
+    padding: 5px;
+    font-weight: lighter;
+    color: rgb(54,54,54);
+    letter-spacing: 1px;
+}
+
+.wrapper .main-head {
+    font-size: 3.5rem;
+    font-weight: bolder;
+    color: rgba(0,0,0,0.938);
+    text-shadow: 3px 0px 0px rgba(0,0,0,0.938);
+}
+
+.text-shadow{
+    text-shadow: 1px 0px 0px rgb(0 0 0 / 62%);
+}
+
+.clock i {
+    font-size: 5rem;
+    margin-top: 10px;
+    border: 8px solid #fbbf24;
+    border-radius: 50%;
+    background-color: black;
+    color: white;
+}
+
+.modes {
+    padding: 10px 20px;
+    font-size: 20px;
+    background-color: white;
+    width: 180px;
+    text-align: center;
+    margin: 15px;
+    border-radius: 15px;
+    cursor: pointer;
+    color: black;
+    box-shadow: rgba(0,0,0,0.15) 1.95px 1.95px 2.6px;
+}
+
+a{
+    text-decoration: none;
+    color: white;
+}
+
+.modes:hover {
+    background-color: #fcd34d;
+}
+
+.selected {
+    background-color: #fcd34d;
+}
+
+.inline {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.nav-links{
+    margin: 20px;
+    position: relative;
+}
+
+.time-modes {
+    display: inline-block;
+}
+
+.options {
+    display: inline;
+    position: absolute;
+    width: max-content;
+    top: 15px;
+}
+
+.option {
+    width: 70px;
+    padding: 5px;
+    margin: 5px;
+    font-size: 18px;
+    border: 2px solid #f3f4f6;
+    color: black;
+}
+
+.option:hover {
+    border: 2px solid var(--primary-color);
+    background-color: white;
+}
+
+.hide {
+    display: none;
+    visibility: collapse;
+}
+
