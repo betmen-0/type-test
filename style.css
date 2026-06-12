@@ -391,5 +391,41 @@ a{
 }
 
 .type-area , .timer {
-    
+    display: block;
+    max-width: 900px;
+    width: 95%;
+    margin: 20px auto;
+    font-size: 20px;
+    resize: none;
+    padding: 20px 30px;
 }
+
+.timer {
+    text-align: right;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+.timer span {
+    background-color: black;
+    color: white;
+    padding: 12px;
+}
+
+.timer-adjust {
+    position: relative;
+    bottom: -35px;
+}
+
+.type-here-div {
+    position: relative;
+    text-align: left;
+    max-width: 940px;
+    width: 100%;
+    margin: 20px auto;
+    animation-name:jump;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease;
+}
+
