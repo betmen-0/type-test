@@ -53,5 +53,58 @@
                 </div>
             </div>
         </div>
+
+        <section class="time-modes-section center" id="time-modes">
+            <svg
+        class="svg-path"
+        width="1440"
+        height="36"
+        viewBox="0 0 1440 36"
+        class="u-block"
+        xmlns="http://www.w3.org/2000/svg"
+        style="width: 100%; height: auto"
+      >
+        <rect width="100%" height="100%" fill="#F6F6F7"></rect>
+        <path
+          d="M1440 36V8.2s-105.6-1.2-160.7-6a877 877 0 00-150.5 2.5c-42.1 3.9-140 15-223 15C754 19.6 700.3 6.8 548.8 7c-143.7 0-273.4 11.5-350 12.6-76.6 1.2-198.8 0-198.8 0V36h1440z"
+          fill="var(--primary-color)"
+        ></path>
+      </svg>
+      <h3 class="sub-head">Type as much as your @ss can</h3>
+      <h1 class="head text-shadow">Beat the time</h1>
+      <div class="time-modes-wrapper">
+        <div class="result grid-container">
+            <div class="time one result-data" id="clock-time-modes">
+                <p>1
+                    <span class="mini"><br/>min</span>
+                </p>
+            </div>
+            <div class="wpm grid two result-data" id="timer-wpm">0</div>
+            <div class="wpm-head five result-head">words/min</div>
+            <div class="cpm grid three result-data" id="timer-cpm">0</div>
+            <div class="cpm-head six result-head">chars/min</div>
+            <div class="accuracy grid four result-data" id="timer-accuracy">0</div>
+            <div class="accuracy-head seven result-head">% accuracy</div>
+        </div>
+        <p class="para-type infinity-para"></p>
+        <div class="timer min1 timer-adjust">
+            <span class="min" id="timer-minute">01</span>
+            <bold>:</bold>
+            <span class="sec" id="timer-second">00</span>
+        </div>
+        <div class="type-here-div">
+            <span class="type-here-anim">Start Typing</span>
+            <span class="triangle-down"></span>
+        </div>
+
+        <textarea
+            class="type-area"
+            name="type-area"
+            id="type-area"
+            cols="30"
+            rows="10"
+        ></textarea>
+      </div>
+        </section>
     </body>
 </html>
