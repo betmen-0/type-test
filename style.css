@@ -429,6 +429,18 @@ a{
     animation-timing-function: ease;
 }
 
+@keyframes jump {
+    0% {
+        top: 5px;
+    }
+    50% {
+        top: -10px;
+    }
+    100% {
+        top: 5px;
+    }
+}
+
 .type-here-anim {
     background-color: #333333ca;
     color: white;
@@ -561,6 +573,18 @@ textarea:focus, input:focus,select:focus {
     animation-timing-function: ease;
 }
 
+@keyframes fade {
+    0%{
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 .infinity-mode-section .grid-container{
     margin-top: 50px;
 }
@@ -662,4 +686,38 @@ textarea:focus, input:focus,select:focus {
     margin-bottom: 50px;
     color: var(--primary-color);
 } 
+
+footer {
+    background-color: rgb(0,0,0);
+    color: white;
+    text-align: center;
+    padding: 4rem 1.5rem;
+    position: relative;
+    clear: both;
+}
+
+.footer .footer-header {
+    font-weight: bold;
+    font-size: large;
+    margin-bottom: 10px;
+    letter-spacing: 1.5px;
+}
+
+.footer .link-footer {
+    color: white;
+}
+
+.footer ul {
+    padding-inline-start : 0px;
+    padding-top: 10px;
+    list-style: none;
+}
+
+.footer ul li{
+    display: inline-block;
+}
+
+.list-item-inline a {
+    color: white;
+}
 
