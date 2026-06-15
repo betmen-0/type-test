@@ -390,7 +390,7 @@ a{
     box-shadow: rgba(0,0,0,0.24) 0px 3px 8px;
 }
 
-.type-area , .timer {
+.type-area , .timer , .user-type {
     display: block;
     max-width: 900px;
     width: 95%;
@@ -532,3 +532,102 @@ textarea:focus, input:focus,select:focus {
     display: inline-block;
 }
 
+/*=====NEW SECTION=====*/
+
+.infinity-mode-section{
+    position: relative;
+    background-color: #f6f6f7;
+    padding: 30px 10px 100px 10px;
+    text-align: center;
+}
+
+.infinity-mode-section .sub-head{
+    margin-top: 80px;
+    font-weight: lighter;
+    color: rgb(46,46,46);
+}
+
+.infinity-mode-section .head {
+    margin-top: 15px;
+    font-size: 35px;
+    letter-spacing: 3px;
+    font-weight: bolder;
+}
+
+.infinity-icon {
+    animation-name: fade;
+    animation-duration: 0.75s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease;
+}
+
+.infinity-mode-section .grid-container{
+    margin-top: 50px;
+}
+
+.infinity-mode-section .result-data {
+    line-height: 90px;
+}
+
+.infinity-mode-section .result-data p {
+    line-height: 100px;
+}
+
+.infinity-mode-section .time {
+    font-size: 50px;
+    font-weight: lighter;
+}
+
+.infinity-mode-section .result-timer-infinity{
+    border: 8px solid var(--primary-color);
+    background-color: rgba(49,49,49,0.685);
+}
+
+.user-type {
+    background-color: var(--light-gray);
+    border: 1px solid var(--light-gray);
+}
+
+#sample-para {
+    background-color: white;
+    border: 5px solid #ffd000e1;
+    margin: 60px auto;
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.goto-samples {
+    color: black;
+    text-align: right;
+    position: relative;
+    top: -45px;
+    color: #991b1b;
+    font-weight: bold;
+}
+
+.infinity-mode-section .type-area {
+    background-color: white;
+    border: 3px solid #a1a1aa;
+}
+
+.start {
+    background-color: var(--primary-color);
+    color: rgba(32,32,32,0.877);
+}
+
+.reset {
+    background-color: rgba(32,32,32,0.877);
+    color: white;
+}
+
+.sample-container {
+    background-color: #1b1b20;
+    padding: 50px 10px 80px 10px;
+    position: relative;
+    background-image: url(./imgs/stars.png),url(./imgs/stars.png);
+    background-size: 572px auto;
+    background-position: calc(50% - 750px),
+    calc(50% + 750px);
+    background-repeat: repeat-y;
+    text-align: center;
+}
