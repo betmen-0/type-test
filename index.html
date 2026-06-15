@@ -152,7 +152,7 @@
                     <div class="user-space">
                         <p class="user-type no-select infinity-user-type" id="sample-para"></p>
                     <div>
-                    <a href="#" class="goto-samples">Choose another?</a>
+                    <a href="#sample-container" class="goto-samples">Choose another?</a>
                 </div>
                 <div class="timer">
                     <span class="min infinity-min">00</span>
@@ -193,6 +193,48 @@
           fill="#1B1B20"
         ></path>
       </svg>
+
+      <div class="separator"><i class="fas fa-ellipsis-h"></i></div>
+      <h2 class="sample-head">Samples</h2>
+      <h3 class="sub-head">Choose a category and pick you text</h3>
+
+      <div class="category-tabs">
+        <button class="category-tab active" data-category="quotes">
+            <i class="fas fa-quote-right"></i>
+            Quotes
+        </button>
+        <button class="category-tab" data-category="code">
+            <i class="fas fa-code"></i>
+            Code
+        </button>
+        <button class="category-tab" data-category="lyrics"><i class="fas fa-music">
+            Lyrics
+        </i></button>
+        <button class="categorry-tab" data-category="facts">
+            <i class="fas fa-lightbulb"></i>
+            Facts
+        </button>
+        <button class="category-tab" data-category="custom">
+            <i class="fas fa-pen"></i>
+            Custom
+        </button>
+      </div>
+
+      <div class="samples-list" id="samples-list">
+      </div>
+
+      <div class="custom-input-area" id="custom-input-area">
+        <textarea
+        id="custom-text-input"
+        class="custom-textarea"
+        placeholder="Paste or Type your own text here... (min 20 char)"
+        rows="6"
+        ></textarea>
+        <button class="btn custom-submit-btn"
+        id="custom-submit-btn">
+    <i class="fa fa-check"></i> Use this Text</button>
+      </div>
         </div>
+
     </body>
 </html>
