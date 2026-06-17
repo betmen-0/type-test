@@ -25,7 +25,7 @@ document.querySelector(".infinity-para").innerText = infinityPara;
 
 
 function manageBtns(e) {
-    var classes = e.target.classList.value.split("");
+    var classes = e.target.classList.value.split(" ");
     if (!(classes.includes("option") || classes.includes("show-time-modes"))) {
         document.querySelector(".show-time-modes").classList.remove("selected");
         document.querySelector(".infinity-mode").classList.remove("hide");
@@ -117,7 +117,7 @@ var updateClock = function (time) {
             document.querySelector(".sec").innerText = "0" + secondValue;
         } else if (secondValue < 10 && minuteValue >= 10) {
             document.querySelector(".min").innerText = minuteValue;
-            document.querySelector("sec").innerText = "0" + secondValue;
+            document.querySelector(".sec").innerText = "0" + secondValue;
         } else if (minuteValue < 10 && secondValue >= 10) {
             document.querySelector(".min").innerText = "0" + minuteValue;
             document.querySelector(".sec").innerText = secondValue;
@@ -133,7 +133,7 @@ var updateClock = function (time) {
     }
 
     function runTimer() {
-        ticktock = setInterval(countDOwntimer,1000);
+        ticktock = setInterval(countdownTimer,1000);
     }
 
     document.querySelector(".type-area").addEventListener("focus",() => {
@@ -143,3 +143,75 @@ var updateClock = function (time) {
             runTimer();
         }
     });
+
+    function checkUserInput() {
+        var userInput = document 
+        .querySelector(".type-area")
+        .value.replace(minusString,"");
+
+        if (userInput[userInput.length -1] === " ") {
+            handleSpace();
+            return;
+        }
+
+
+        let startword = modifiedpara.substr(0, modifiedpara.indexOf(" ")+ 1);
+
+        if (document.querySelector(".type-area").value == "") {
+            document.querySelector(".para-type").innerText = infinityPara;
+        } else if (startword.includes(userInput)) {
+            text = modifiedpara;
+            text = text.replace(
+                userInput,
+                `<span class="highlight">`+ userInput + "</span>"
+            );
+            document.querySelector(".para-type").innerHTML = text;
+        } else {
+            return;
+        }
+    }
+
+    document.querySelector(".type-area").addEventListener("input",checkUserInput);
+
+    function handleSpace() {
+        var userType = document.querySelector(".type-area").value;
+        var deleteData = userType.replace(minusString, "");
+        let startword = modifiedpara.substr(0, modifiedpara.indexOf(" ") + 1);
+
+        if (startword == deleteData) {
+            modifiedpara = modifiedpara.replace(deleteData,"");
+            document.querySelector(".para-type").innerHTML = modifiedpara;
+            minusString = userType;
+        } else if (startword != deleteData && userType != deleteData) {
+            document.querySelector(".error-bundle").innerHTML = document.querySelector(".error-bundle").innerHTML
+            + `<span class="error-word">${deleteData}</span>`;
+            document.querySelector(".type-area").value = minusString;
+            mistakeCount += 1;
+            modifiedpara.replace([`<span class="highlight">` + deleteData + `</span>`],"");
+            document.querySelector(".para-type").innerHTML = modifiedpara;
+        } else {
+            document.querySelector(".type-area").value = minusString;
+        }
+    }
+
+    document.querySelector(".type-area").onkeydown = (e) => {
+
+    }
+
+    document.querySelector(".type-area").addEventListener("keydown", function (event){
+        if (event.key === "Enter") {
+            document.querySelector(".type-area").value = minusString;
+            event.preventDefault();
+            return false;
+        }
+
+        if (event.key === "Backspace" || event.keyCode == 8) {
+            var userTyped = document.querySelector(".type-area").value;
+            if(userTyped == minusString || minusString.includes(userTyped)) {
+                event.preventDefault();
+                return false;
+            }
+        }
+    });
+
+    
