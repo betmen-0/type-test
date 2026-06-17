@@ -38,3 +38,69 @@ function manageBtns(e) {
     }
 }
 
+window.addEventListener("click",(e) => {
+    manageBtns(e);
+});
+
+function toggleVisibility() {
+    var options = document 
+    .querySelector(".test-options")
+    .querySelectorAll(".option");
+  options.forEach((option) => {
+    var present = option.classList.contains("hide");
+    if (present == true) {
+        option.classList.remove("hide");
+        document.querySelector(".show-time-modes").classList.add("selected");
+        if (window.innerWidth <= 800) {
+            document.querySelector(".infinity-mode").classList.add("hide");
+        }
+    } else {
+        option.classList.add("hide");
+        document.querySelector(".show-time-modes").classList.remove("selected");
+        if(window.innerWidth <= 800) {
+            document.querySelector(".infinity-mode").classList.remove("hide");
+        }
+    }
+  });
+}
+
+document
+.querySelector(".show-time-modes")
+.addEventListener("click",toggleVisibility);
+
+var updateClock = function (time) {
+    document.querySelector
+        ("#clock-time-mode").innerHTML = `<p>${time}<span class="mini"><br>min</span></p>`;
+        document.querySelector("#timer-minute").innerText = "0" + time.toString();
+        document.querySelector("#timer-second").innerText = "00";
+        minuteValue = time;
+        localStorage.setItem("minuteValue",time);
+        setDefault();
+    };
+
+    document.querySelector("#minute1").addEventListener(
+        "click",
+        () => {
+            updateClock(1);
+        },
+        false
+    );
+
+
+    document.querySelector("#minute2").addEventListener(
+        "click",
+        () => {
+            updateClock(2);
+        },
+        false
+    );
+
+    document.querySelector("#minute3").addEventListener(
+        "click",
+        () => {
+            updateClock(3);
+        },
+        false
+    );
+
+    
