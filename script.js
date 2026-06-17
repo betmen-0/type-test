@@ -103,4 +103,43 @@ var updateClock = function (time) {
         false
     );
 
-    
+
+    function countdownTimer() {
+        if (secondValue == 0) {
+            minuteValue = minuteValue -1;
+            secondValue = 59;
+        } else {
+            secondValue = secondValue -1;
+        }
+
+        if (secondValue < 10 && minuteValue < 10) {
+            document.querySelector(".min").innerText = "0" + minuteValue;
+            document.querySelector(".sec").innerText = "0" + secondValue;
+        } else if (secondValue < 10 && minuteValue >= 10) {
+            document.querySelector(".min").innerText = minuteValue;
+            document.querySelector("sec").innerText = "0" + secondValue;
+        } else if (minuteValue < 10 && secondValue >= 10) {
+            document.querySelector(".min").innerText = "0" + minuteValue;
+            document.querySelector(".sec").innerText = secondValue;
+        } else {
+            document.querySelector(".min").innerText = minuteValue;
+            document.querySelector(".sec").innerText = secondValue;
+        }
+
+        if (minuteValue == 0 && secondValue == 0) {
+            clearInterval(ticktock);
+            timeUp();
+        }
+    }
+
+    function runTimer() {
+        ticktock = setInterval(countDOwntimer,1000);
+    }
+
+    document.querySelector(".type-area").addEventListener("focus",() => {
+        if (typingStarted == false) {
+            typingStarted = true;
+            document.querySelector(".type-here-div").style.visibility = "hidden";
+            runTimer();
+        }
+    });
