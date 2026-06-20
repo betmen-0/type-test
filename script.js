@@ -214,4 +214,76 @@ var updateClock = function (time) {
         }
     });
 
-    
+function calculateWPM(data,totalMin) {
+    var charcount = data.length;
+    if (charcount === undefined) {
+        return data / 5 / totalMin;
+    }
+    return (wpm = charcount/5/totalMin);
+}
+
+function calculateCPM(data, totalMin) {
+    var charcount = data.length;
+    if(charcount == undefined) {
+        return (wpm = data/totalMin);
+    }
+    return (wpm = charcount/totalMin);
+}
+
+function calculateAccuracy(correctChars,totalChars) {
+    correctChar = correctChars.length;
+    if (correctChar == undefined) {
+        correctChar = correctChars;
+    }
+    totalChar = totalChars.length;
+    if (totalChar == undefined) {
+        totalChar = totalChars;
+    }
+    return (correctChar / totalChar) * 100;
+}
+
+
+async function timeUp () {
+    document.querySelector(".type-area").disabled = true;
+
+
+    document.querySelector(".showbox").style.visibility = "visible";
+
+    let myPromise = new Promise(function (myResolve,myReject) {
+        setTimeout(function (){
+            myResolve(clearLoader);
+        },5000);
+    });
+
+    await myPromise.then((result) => {
+        clearLoader();
+    });
+
+    document.querySelector("#time-modes").scrollIntoView();
+
+    var data = document.querySelector(".type-area").value;
+    var time = localStorage.getItem("minuteValue");
+    if (time == undefined || time == null) {
+        time = 1;
+    }
+
+    var correct = minusString;
+    var error = document.querySelector("error-bundle").innerText.replace("<span class='error-word'>","");
+    error = error.replace("</span>","");
+    var total = correct + error;
+
+    document.querySelector("#timer-wpm").innerText = calculateWPM(
+        minusString,
+        time
+    ).toFixed(2);
+    document.querySelector("#timer-cpm").innerText = calculateCPM(
+        total,
+        time
+    ).toFixed(2);
+    document.querySelector("#timer-accuracy").innerText = calculateAccuracy(
+        correct,
+        total
+    ).toFixed(2);
+}
+
+
