@@ -286,4 +286,204 @@ async function timeUp () {
     ).toFixed(2);
 }
 
+function clearLoader () {
+    document.querySelector(".showbox").style.visibility = "collapse";
+}
 
+
+
+function setDefault() {
+    clearInterval(ticktock);
+    document.querySelector("#timer-wpm").innerText = "0";
+    document.querySelector("#timer-cpm").innerText = "0";
+    document.querySelector("#timer-accuracy").innerText = "0";
+    document.querySelector(".time-modes-wrapper").querySelector(".para-type").innerText = infinityPara;
+    document.querySelector(".time-modes-wrapper").querySelector(".type-area").value = "";
+    document.querySelector(".time-modes-wrapper").querySelector(".type-area").disabled = false;
+    document.querySelector(".type-here-div").style.visibility = "visible";
+    document.querySelector(".error-div").querySelector(".error").innerText = "";
+    modifiedpara = infinityPara;
+    minusString = "";
+    typingStarted = false;
+    reset();
+}
+
+function resetTimeMode() {
+    typingStarted = false;
+    clearInterval(ticktock);
+    document.querySelector(".type-here-div").style.visibility = "visible";
+    document.querySelector(".para-type").innerHTML = infinityPara;
+
+
+    var textarea = document.querySelector(".type-area");
+    textarea.style.borderColor = '#A1A1AA';
+    textarea.value = "";
+    textarea.disabled = false;
+
+    minuteValue = localStorage.getItem("minuteValue");
+    if (minuteValue == undefined || minuteValue == null) {
+        minuteValue = 1;
+    }
+    secondValue = 0;
+
+    document.querySelector(".min1").querySelector(".min").innerText = "0" + minuteValue.toString();
+    document.querySelector(".min1").querySelector(".sec").innerText = "00";
+    document.querySelector("#clock-time-mode").innerHTML = `<p>${minuteValue}<spam class="mini"><br>min</spam></p>`;
+    document.querySelector(".error-div").querySelector(".error").innerText = "";
+    document.querySelector("#timer-wpm").innerText = "0";
+    document.querySelector("#timer-cpm").innerText = "0";
+    document.querySelector("#timer-accuracy").innerText = "0";
+
+    modifiedpara = infinityPara;
+    minusString = "";
+    mistakeCount = 0;
+}
+
+document.querySelector(".reset-time-mode").addEventListener("click",resetTimeMode);
+
+
+
+var min = 0;
+var sec = 0;
+var clocking;
+var totalCharslnf = 0;
+
+
+
+var random = Math.floor(Math.random () *5 + 1) - 1;
+document.querySelector(".infinity-user-type").innerText = samples[random];
+
+
+document.querySelector("#infinity-mode-btn").addEventListener("click",() => {
+    setDefault();
+    resetTimeMode();
+});
+
+
+document.querySelector(".sample-container").addEventListener("click",(callback) => {
+    document.querySelector(".infinity-user-type").innerText = callback.target.innerText;
+    for (i = 0; i< samples.length; i++) {
+        if (samples[i] == callback.target.innerText) {
+            random = i;
+        }
+    }
+    reset();
+
+    function timer () {
+        if (sec === 59) {
+            min = min + 1;
+            sec = 0;
+        } else {
+            sec = sec + 1;
+        }
+
+        if (sec < 10 && min < 10) {
+            document.querySelector(".infinity-min").innerText = "0" + min;
+            document.querySelector(".infinity-sec").innerText = "0" + sec;
+        } else if (sec < 10 && min >= 10) {
+            document.querySelector(".infinity-min").innerText = min;
+            document.querySelector(".infinity-sec").innerText = "0" + sec;
+        } else if (min <10 && sec >= 10) {
+            document.querySelector(".infinity-min").innerText = "0" + min;
+            document.querySelector(".infinity-sec").innerText = sec;
+        } else {
+            document.querySelector(".infinity-min").innerText = min;
+            document.querySelector("infinity-sec").innerText = sec;
+        }
+    }
+
+
+    function start () {
+        document.querySelector(".infinity-type-area").disabled = false;
+        document.querySelector(".start").disabled = true;
+        document.querySelector(".start").style.backgroundColor = "#D4D4D4";
+        document.querySelector(".start").style.cursor = "auto";
+        clocking = setInterval(timer, 1000);
+    }
+
+    function reset() {
+        document.querySelector(".infinity-type-area").disabled=true;
+        document.querySelector(".start").disabled = false;
+        document.querySelector(".start").style.backgroundColor = "var(--primary-color)";
+        document.querySelector(".start").style.cursor = "pointer";
+        document.querySelector(".infinity-type-area").style.borderColor = "#A1A1A1";
+        clearInterval(clocking);
+        document.querySelector("infinity-min").innerText = "00";
+        document.querySelector(".infinity-sec").innerText = "00";
+        min = 0;
+        sec = 0;
+        document.querySelector(".infinity-type-area").value = "";
+        document.querySelector("#timer-wpm-inf").innerText = "0";
+        document.querySelector("#timer-cpm-inf").innerText = "0";
+        document.querySelector("#timer-accuracy-inf").innerText = "0";
+        document.querySelector(".infinity-user-type").innerText = samples[random]; 
+    }
+
+
+    document.querySelector(".start").addEventListener("click", start);
+    document.querySelector(".reset").addEventListener("click", reset);
+
+
+    async function checkUserInputInfinity() {
+        totalCharslnf += 1;
+        var para = samples[random];
+        var userInput = document.querySelector(".infinity-type-area").value;
+
+        if (userInput == "") {
+            document.querySelector(".infinity-type-area").style.borderColor = "#A1A1AA";
+            document.querySelector(".infinity-user-type").innerText = samples[random];
+        } else if (para == userInput) {
+            document.querySelector(".infinity-type-area").style.borderColor = "#16A34A";
+            text = samples[random];
+            clearInterval(clocking);
+            text = text.replace(
+                userInput, '<span class="highlight-final">' + userInput + "</span>" 
+            );
+            document.querySelector(".infinity-user-type").innerHTML = text;
+            document.querySelector(".infinity-type-area").disabled = true;
+
+            document.querySelector(".showbox").style.visibility = "visible";
+            let myPromise = new Promise(function (myResolve, myReject) {
+                setTimeout(function () {
+                    myResolve(clearLoader);
+                }, 5000);
+            });
+            await myPromise.then((result) => {
+                clearLoader();
+            });
+
+
+            document.querySelector("#infinity-mode").scrollIntoView();
+            result();
+        } else if (para.includes(userInput)) {
+            document.querySelector(".infinity-type-area").style.borderColor = "#F97316";
+            text = samples[random];
+            text = text.replace(
+                userInput, '<span class="highlight">' + userInput + "</span>"
+            );
+            document.querySelector(".infinity-user-type").innerHTML = text;
+        } else {
+            // Error - turn border red
+            if (
+                document.querySelector(".infinity-type-area").style.borderColor == "#EA580C") {
+                    mistakeCount += 1;
+                }
+                document.querySelector(".infinity-type-area").style.borderColor = "#DC2626";
+        }
+    }
+
+    document.querySelector(".infinity-type-area").addEventListener("input",checkUserInputInfinity);
+
+
+    function result () {
+        var totalTime = parseInt(min) + parseInt(sec)/60;
+        var wpm = calculateWPM(samples[random],totalTime).toFixed(2);
+        var cpm = calculateCPM(totalCharslnf, totalTime).toFixed(2);
+        var accuracy = calculateAccuracy(samples[random],totalCharslnf).toFixed(2);
+
+
+        document.querySelector("#timer-wpm-inf").innerText = wpm;
+        document.querySelector("#timer-cpm-inf").innerText = cpm;
+        document.querySelector("#timer-accuracy-inf").innerText = accuracy;
+    }
+});
