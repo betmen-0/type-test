@@ -21,9 +21,11 @@ body {
     top: 0;
     left: 0;
     bottom: 0;
-    right:0;
+    right: 0;
     padding: 5%;
-    z-index:1;
+    z-index: 1;
+    visibility: hidden;
+    pointer-events: none;
 }
 
 .loader {
@@ -373,14 +375,14 @@ a{
     width: 95%;
     font-size: 25px;
     display: block;
-    height: 90px;
+    min-height: 160px;
     margin: 50px auto;
-    overflow-y: hidden;
+    overflow: visible;
     background-color: black;
     color: white;
     padding: 8px 15px;
-    line-height: 3em;
-    word-break: break-all;
+    line-height: 1.8em;
+    word-break: break-word;
 }
 
 .time-modes-wrapper .para-type {
@@ -464,6 +466,9 @@ a{
     box-shadow: rgba(0,0,0,0.387) 0px 3px 8px;
     border-radius: 20px;
     background-color: #f6f6f7;
+    color: #111;
+    min-height: 220px;
+    line-height: 1.5em;
 }
 
 textarea:focus, input:focus,select:focus {
@@ -644,6 +649,23 @@ textarea:focus, input:focus,select:focus {
     color: white;
 }
 
+.infinity-mode-section .result {
+    max-width: 900px;
+    width: 95%;
+    margin: 15px auto 0;
+    padding: 15px 20px;
+    background-color: white;
+    border-radius: 18px;
+    box-shadow: rgba(0,0,0,0.12) 0px 4px 14px;
+}
+
+.infinity-mode-section .result p {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgb(22, 22, 22);
+}
+
 .sample-container {
     background-color: #1b1b20;
     padding: 50px 10px 80px 10px;
@@ -803,7 +825,7 @@ footer {
     }
 
     .type-area{
-        height: 160px;
+        min-height: 300px;
     }
 
     .user-type,

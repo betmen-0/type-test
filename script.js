@@ -7,7 +7,7 @@ var samples = [
 
 ]
 
-var infinityPara = "In a world where information travels faster than ever before, the ability to focus, learn, and adapt has become one of the most valuable skills a person can possess. Every day presents countless opportunities to discover something new, whether it involves mastering a technical skill, reading an interesting book, exploring a different culture, or simply having meaningful conversations with people who offer unique perspectives. Success is rarely achieved through luck alone; instead, it is often the result of consistent effort, patience, and the willingness to keep moving forward despite obstacles and setbacks. People who embrace lifelong learning tend to develop stronger problem-solving abilities and greater confidence in their decisions because they understand that growth is a continuous process rather than a final destination. Modern technology has made knowledge more accessible than ever, allowing students, professionals, and curious minds to access educational resources from virtually anywhere in the world. However, while digital tools provide convenience and efficiency, qualities such as creativity, empathy, discipline, and critical thinking remain uniquely human strengths that cannot easily be replaced."
+var infinityPara = "In a world where information travels faster than ever before, the ability to focus, learn, and adapt has become one of the most valuable skills a person can possess. Every day presents countless opportunities to discover something new. And Be consistent unlike me :)"
 
 localStorage.setItem("minuteValue",1);
 
@@ -25,13 +25,21 @@ document.querySelector(".infinity-para").innerText = infinityPara;
 
 
 function manageBtns(e) {
+    if (!e.target || !e.target.classList) {
+        return;
+    }
     var classes = e.target.classList.value.split(" ");
     if (!(classes.includes("option") || classes.includes("show-time-modes"))) {
-        document.querySelector(".show-time-modes").classList.remove("selected");
-        document.querySelector(".infinity-mode").classList.remove("hide");
-        var options = document
-            .querySelector(".test-options")
-            .querySelectorAll("option");
+        var showTimeModes = document.querySelector(".show-time-modes");
+        if (showTimeModes) {
+            showTimeModes.classList.remove("selected");
+        }
+        var infinityModeSection = document.querySelector("#infinity-mode");
+        if (infinityModeSection) {
+            infinityModeSection.classList.remove("hide");
+        }
+        var testOptions = document.querySelector(".test-options");
+        var options = testOptions ? testOptions.querySelectorAll(".option") : [];
         options.forEach((option) => {
             option.classList.add("hide");
         });
@@ -70,7 +78,7 @@ document
 
 var updateClock = function (time) {
     document.querySelector
-        ("#clock-time-mode").innerHTML = `<p>${time}<span class="mini"><br>min</span></p>`;
+        ("#clock-time-modes").innerHTML = `<p>${time}<span class="mini"><br>min</span></p>`;
         document.querySelector("#timer-minute").innerText = "0" + time.toString();
         document.querySelector("#timer-second").innerText = "00";
         minuteValue = time;
@@ -231,13 +239,10 @@ function calculateCPM(data, totalMin) {
 }
 
 function calculateAccuracy(correctChars,totalChars) {
-    correctChar = correctChars.length;
-    if (correctChar == undefined) {
-        correctChar = correctChars;
-    }
-    totalChar = totalChars.length;
-    if (totalChar == undefined) {
-        totalChar = totalChars;
+    var correctChar = typeof correctChars === "number" ? correctChars : correctChars.length;
+    var totalChar = typeof totalChars === "number" ? totalChars : totalChars.length;
+    if (!totalChar) {
+        return 0;
     }
     return (correctChar / totalChar) * 100;
 }
@@ -268,7 +273,7 @@ async function timeUp () {
     }
 
     var correct = minusString;
-    var error = document.querySelector("error-bundle").innerText.replace("<span class='error-word'>","");
+    var error = document.querySelector(".error-bundle").innerText.replace("<span class='error-word'>","");
     error = error.replace("</span>","");
     var total = correct + error;
 
@@ -287,7 +292,8 @@ async function timeUp () {
 }
 
 function clearLoader () {
-    document.querySelector(".showbox").style.visibility = "collapse";
+    document.querySelector(".showbox").style.visibility = "hidden";
+    document.querySelector(".showbox").style.pointerEvents = "none";
 }
 
 
@@ -328,7 +334,7 @@ function resetTimeMode() {
 
     document.querySelector(".min1").querySelector(".min").innerText = "0" + minuteValue.toString();
     document.querySelector(".min1").querySelector(".sec").innerText = "00";
-    document.querySelector("#clock-time-mode").innerHTML = `<p>${minuteValue}<spam class="mini"><br>min</spam></p>`;
+    document.querySelector("#clock-time-modes").innerHTML = `<p>${minuteValue}<span class="mini"><br>min</span></p>`;
     document.querySelector(".error-div").querySelector(".error").innerText = "";
     document.querySelector("#timer-wpm").innerText = "0";
     document.querySelector("#timer-cpm").innerText = "0";
@@ -359,131 +365,206 @@ document.querySelector("#infinity-mode-btn").addEventListener("click",() => {
     resetTimeMode();
 });
 
+function renderSamples() {
+    const sampleList = document.querySelector("#samples-list");
+    if (!sampleList) return;
+    sampleList.innerHTML = samples
+        .map((text, index) => {
+            const preview = text.length > 100 ? text.slice(0, 100) + "..." : text;
+            return `<button type="button" class="sample-item btn" data-index="${index}">${preview}</button>`;
+        })
+        .join("");
+}
 
-document.querySelector(".sample-container").addEventListener("click",(callback) => {
-    document.querySelector(".infinity-user-type").innerText = callback.target.innerText;
-    for (i = 0; i< samples.length; i++) {
-        if (samples[i] == callback.target.innerText) {
-            random = i;
-        }
-    }
+function selectSample(index) {
+    if (index < 0 || index >= samples.length) return;
+    random = index;
+    document.querySelector(".infinity-user-type").innerText = samples[random];
     reset();
+}
 
-    function timer () {
-        if (sec === 59) {
-            min = min + 1;
-            sec = 0;
+function showSamples() {
+    const sampleList = document.querySelector("#samples-list");
+    const customArea = document.querySelector("#custom-input-area");
+    if (sampleList) {
+        sampleList.style.display = "flex";
+    }
+    if (customArea) {
+        customArea.style.display = "none";
+    }
+}
+
+function showCustomInput() {
+    const sampleList = document.querySelector("#samples-list");
+    const customArea = document.querySelector("#custom-input-area");
+    if (sampleList) {
+        sampleList.style.display = "none";
+    }
+    if (customArea) {
+        customArea.style.display = "block";
+    }
+}
+
+const sampleList = document.querySelector("#samples-list");
+if (sampleList) {
+    sampleList.style.display = "none";
+    sampleList.addEventListener("click", (event) => {
+        const item = event.target.closest(".sample-item");
+        if (!item) return;
+        selectSample(Number(item.dataset.index));
+    });
+}
+
+const categoryTabs = document.querySelectorAll(".category-tab");
+categoryTabs.forEach((tab) => {
+    tab.addEventListener("click", (event) => {
+        categoryTabs.forEach((t) => t.classList.remove("active"));
+        event.currentTarget.classList.add("active");
+        const category = event.currentTarget.dataset.category;
+        if (category === "custom") {
+            showCustomInput();
         } else {
-            sec = sec + 1;
+            renderSamples();
+            showSamples();
         }
-
-        if (sec < 10 && min < 10) {
-            document.querySelector(".infinity-min").innerText = "0" + min;
-            document.querySelector(".infinity-sec").innerText = "0" + sec;
-        } else if (sec < 10 && min >= 10) {
-            document.querySelector(".infinity-min").innerText = min;
-            document.querySelector(".infinity-sec").innerText = "0" + sec;
-        } else if (min <10 && sec >= 10) {
-            document.querySelector(".infinity-min").innerText = "0" + min;
-            document.querySelector(".infinity-sec").innerText = sec;
-        } else {
-            document.querySelector(".infinity-min").innerText = min;
-            document.querySelector("infinity-sec").innerText = sec;
-        }
-    }
-
-
-    function start () {
-        document.querySelector(".infinity-type-area").disabled = false;
-        document.querySelector(".start").disabled = true;
-        document.querySelector(".start").style.backgroundColor = "#D4D4D4";
-        document.querySelector(".start").style.cursor = "auto";
-        clocking = setInterval(timer, 1000);
-    }
-
-    function reset() {
-        document.querySelector(".infinity-type-area").disabled=true;
-        document.querySelector(".start").disabled = false;
-        document.querySelector(".start").style.backgroundColor = "var(--primary-color)";
-        document.querySelector(".start").style.cursor = "pointer";
-        document.querySelector(".infinity-type-area").style.borderColor = "#A1A1A1";
-        clearInterval(clocking);
-        document.querySelector("infinity-min").innerText = "00";
-        document.querySelector(".infinity-sec").innerText = "00";
-        min = 0;
-        sec = 0;
-        document.querySelector(".infinity-type-area").value = "";
-        document.querySelector("#timer-wpm-inf").innerText = "0";
-        document.querySelector("#timer-cpm-inf").innerText = "0";
-        document.querySelector("#timer-accuracy-inf").innerText = "0";
-        document.querySelector(".infinity-user-type").innerText = samples[random]; 
-    }
-
-
-    document.querySelector(".start").addEventListener("click", start);
-    document.querySelector(".reset").addEventListener("click", reset);
-
-
-    async function checkUserInputInfinity() {
-        totalCharslnf += 1;
-        var para = samples[random];
-        var userInput = document.querySelector(".infinity-type-area").value;
-
-        if (userInput == "") {
-            document.querySelector(".infinity-type-area").style.borderColor = "#A1A1AA";
-            document.querySelector(".infinity-user-type").innerText = samples[random];
-        } else if (para == userInput) {
-            document.querySelector(".infinity-type-area").style.borderColor = "#16A34A";
-            text = samples[random];
-            clearInterval(clocking);
-            text = text.replace(
-                userInput, '<span class="highlight-final">' + userInput + "</span>" 
-            );
-            document.querySelector(".infinity-user-type").innerHTML = text;
-            document.querySelector(".infinity-type-area").disabled = true;
-
-            document.querySelector(".showbox").style.visibility = "visible";
-            let myPromise = new Promise(function (myResolve, myReject) {
-                setTimeout(function () {
-                    myResolve(clearLoader);
-                }, 5000);
-            });
-            await myPromise.then((result) => {
-                clearLoader();
-            });
-
-
-            document.querySelector("#infinity-mode").scrollIntoView();
-            result();
-        } else if (para.includes(userInput)) {
-            document.querySelector(".infinity-type-area").style.borderColor = "#F97316";
-            text = samples[random];
-            text = text.replace(
-                userInput, '<span class="highlight">' + userInput + "</span>"
-            );
-            document.querySelector(".infinity-user-type").innerHTML = text;
-        } else {
-            // Error - turn border red
-            if (
-                document.querySelector(".infinity-type-area").style.borderColor == "#EA580C") {
-                    mistakeCount += 1;
-                }
-                document.querySelector(".infinity-type-area").style.borderColor = "#DC2626";
-        }
-    }
-
-    document.querySelector(".infinity-type-area").addEventListener("input",checkUserInputInfinity);
-
-
-    function result () {
-        var totalTime = parseInt(min) + parseInt(sec)/60;
-        var wpm = calculateWPM(samples[random],totalTime).toFixed(2);
-        var cpm = calculateCPM(totalCharslnf, totalTime).toFixed(2);
-        var accuracy = calculateAccuracy(samples[random],totalCharslnf).toFixed(2);
-
-
-        document.querySelector("#timer-wpm-inf").innerText = wpm;
-        document.querySelector("#timer-cpm-inf").innerText = cpm;
-        document.querySelector("#timer-accuracy-inf").innerText = accuracy;
-    }
+    });
 });
+
+const customSubmitBtn = document.querySelector("#custom-submit-btn");
+if (customSubmitBtn) {
+    customSubmitBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        const customText = document.querySelector("#custom-text-input")?.value.trim();
+        if (!customText) {
+            return;
+        }
+        if (customText.length < 20) {
+            alert("Please enter at least 20 characters.");
+            return;
+        }
+        samples.push(customText);
+        random = samples.length - 1;
+        document.querySelector(".infinity-user-type").innerText = customText;
+        reset();
+    });
+}
+
+function timer () {
+    if (sec === 59) {
+        min = min + 1;
+        sec = 0;
+    } else {
+        sec = sec + 1;
+    }
+
+    if (sec < 10 && min < 10) {
+        document.querySelector(".infinity-min").innerText = "0" + min;
+        document.querySelector(".infinity-sec").innerText = "0" + sec;
+    } else if (sec < 10 && min >= 10) {
+        document.querySelector(".infinity-min").innerText = min;
+        document.querySelector(".infinity-sec").innerText = "0" + sec;
+    } else if (min <10 && sec >= 10) {
+        document.querySelector(".infinity-min").innerText = "0" + min;
+        document.querySelector(".infinity-sec").innerText = sec;
+    } else {
+        document.querySelector(".infinity-min").innerText = min;
+        document.querySelector(".infinity-sec").innerText = sec;
+    }
+}
+
+function start () {
+    totalCharslnf = 0;
+    document.querySelector(".infinity-type-area").disabled = false;
+    document.querySelector(".start").disabled = true;
+    document.querySelector(".start").style.backgroundColor = "#D4D4D4";
+    document.querySelector(".start").style.cursor = "auto";
+    clearInterval(clocking);
+    clocking = setInterval(timer, 1000);
+}
+
+function reset() {
+    totalCharslnf = 0;
+    document.querySelector(".infinity-type-area").disabled=true;
+    document.querySelector(".start").disabled = false;
+    document.querySelector(".start").style.backgroundColor = "var(--primary-color)";
+    document.querySelector(".start").style.cursor = "pointer";
+    document.querySelector(".infinity-type-area").style.borderColor = "#A1A1A1";
+    clearInterval(clocking);
+    document.querySelector(".infinity-min").innerText = "00";
+    document.querySelector(".infinity-sec").innerText = "00";
+    min = 0;
+    sec = 0;
+    document.querySelector(".infinity-type-area").value = "";
+    document.querySelector("#timer-wpm-inf").innerText = "0";
+    document.querySelector("#timer-cpm-inf").innerText = "0";
+    document.querySelector("#timer-accuracy-inf").innerText = "0";
+    document.querySelector(".infinity-mode-section .result p").innerText = "";
+    document.querySelector(".infinity-user-type").innerText = samples[random]; 
+}
+
+function checkUserInputInfinity() {
+    totalCharslnf += 1;
+    var para = samples[random];
+    var userInput = document.querySelector(".infinity-type-area").value;
+
+    if (userInput == "") {
+        document.querySelector(".infinity-type-area").style.borderColor = "#A1A1AA";
+        document.querySelector(".infinity-user-type").innerText = samples[random];
+    } else if (para == userInput) {
+        document.querySelector(".infinity-type-area").style.borderColor = "#16A34A";
+        text = samples[random];
+        clearInterval(clocking);
+        text = text.replace(
+            userInput, '<span class="highlight-final">' + userInput + "</span>" 
+        );
+        document.querySelector(".infinity-user-type").innerHTML = text;
+        document.querySelector(".infinity-type-area").disabled = true;
+
+        document.querySelector(".showbox").style.visibility = "visible";
+        let myPromise = new Promise(function (myResolve, myReject) {
+            setTimeout(function () {
+                myResolve(clearLoader);
+            }, 5000);
+        });
+        myPromise.then((result) => {
+            clearLoader();
+        });
+
+        document.querySelector("#infinity-mode").scrollIntoView();
+        result();
+    } else if (para.includes(userInput)) {
+        document.querySelector(".infinity-type-area").style.borderColor = "#F97316";
+        text = samples[random];
+        text = text.replace(
+            userInput, '<span class="highlight">' + userInput + "</span>"
+        );
+        document.querySelector(".infinity-user-type").innerHTML = text;
+    } else {
+        // Error - turn border red
+        if (
+            document.querySelector(".infinity-type-area").style.borderColor == "#EA580C") {
+                mistakeCount += 1;
+            }
+            document.querySelector(".infinity-type-area").style.borderColor = "#DC2626";
+    }
+}
+
+document.querySelector(".start").addEventListener("click", start);
+document.querySelector(".reset").addEventListener("click", reset);
+document.querySelector(".infinity-type-area").addEventListener("input",checkUserInputInfinity);
+
+function result () {
+    var totalTime = parseInt(min) + parseInt(sec)/60;
+    if (totalTime <= 0) {
+        totalTime = 1/60; // prevent division by zero for very fast completions
+    }
+    var wpm = calculateWPM(samples[random],totalTime).toFixed(2);
+    var cpm = calculateCPM(totalCharslnf, totalTime).toFixed(2);
+    var accuracy = calculateAccuracy(samples[random],totalCharslnf).toFixed(2);
+
+    document.querySelector("#timer-wpm-inf").innerText = wpm;
+    document.querySelector("#timer-cpm-inf").innerText = cpm;
+    document.querySelector("#timer-accuracy-inf").innerText = accuracy;
+    document.querySelector(".infinity-mode-section .result p").innerText = `Results ready! WPM: ${wpm}, CPM: ${cpm}, Accuracy: ${accuracy}%`;
+}
+
