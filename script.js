@@ -1,11 +1,65 @@
-var samples = [
-    "In today's fast-paced digital world, learning to type efficiently has become an essential skill for students, professionals, and anyone who spends time on a computer. Developing strong typing habits not only improves speed but also increases accuracy and productivity in everyday tasks. Whether you are writing emails, coding software, preparing reports, or chatting with friends, the ability to type quickly and confidently can save valuable time and reduce frustration. Consistent practice helps build muscle memory, allowing fingers to move naturally across the keyboard without constantly searching for each key"
-    , "Many successful people dedicate a few minutes each day to improving their typing skills because even small improvements can lead to significant gains over time. Patience and regular practice are more important than rushing, as accuracy should always come before speed. By challenging yourself with different kinds of text and gradually increasing your pace, you can develop a smooth and reliable typing style that benefits you in school, work, and everyday life. Remember that progress does not happen overnight, but with persistence and dedication, anyone can become a faster and more accurate typist while gaining confidence and efficiency in the process.",
-    "Technology has transformed the way people communicate, learn, and solve problems in the modern world. From smartphones and laptops to cloud computing and artificial intelligence, digital tools have become deeply integrated into everyday life. Students can access educational resources from anywhere, businesses can collaborate across continents, and individuals can share ideas instantly with people around the globe. Despite these advancements, the importance of creativity, critical thinking, and human connection remains unchanged. Technology should be viewed as a tool that enhances productivity and opens new opportunities rather than something that replaces genuine effort and curiosity. As innovation continues to accelerate, adapting to change and continuously learning new skills will become increasingly valuable. Those who embrace lifelong learning and maintain a willingness to explore new ideas are more likely to succeed in a constantly evolving world where opportunities often arise from unexpected places."
-    , "A peaceful morning often begins with the gentle sound of birds singing and sunlight slowly filling the sky with warm colors. Many people enjoy starting their day with a simple routine that includes exercise, reading, or planning their goals before work or school. Establishing positive habits can improve focus, reduce stress, and create a sense of balance throughout the day. Even small actions, such as drinking enough water, organizing a workspace, or taking short breaks between tasks, can have a meaningful impact on overall well-being. Success is rarely the result of a single extraordinary event; instead, it is usually built through consistent effort and discipline over time. By staying patient and maintaining a positive mindset, individuals can overcome challenges, learn from mistakes, and steadily move closer to achieving their personal and professional aspirations while enjoying the journey along the way.",
-    "Throughout history, exploration and curiosity have driven humanity to discover new lands, develop groundbreaking inventions, and expand the boundaries of knowledge. Great achievements are often the result of countless small efforts combined with determination and perseverance. Scientists, artists, engineers, and writers all contribute to society in unique ways, inspiring future generations to dream bigger and think differently."
+const sampleCategories = {
+    quotes: [
+        "The only limit to our realization of tomorrow is our doubts of today.",
+        "Success usually comes to those who are too busy to be looking for it.",
+        "Life is 10% what happens to us and 90% how we react to it.",
+        "The best way to predict the future is to invent it.",
+        "The secret of getting ahead is getting started."
+    ],
+    code: [
+        `function greet(name) {
+    return \`Hello, ${name}!\`;
+}
 
-]
+console.log(greet('Coder'));`,
+        `const numbers = [1, 2, 3, 4, 5];
+const doubled = numbers.map(n => n * 2);
+console.log(doubled);`,
+        `class Person {
+    constructor(name) {
+        this.name = name;
+    }
+    sayHi() {
+        return \`Hi, I'm ${this.name}\`;
+    }
+}
+
+const user = new Person('Alex');
+console.log(user.sayHi());`
+    ],
+    lyrics: [
+        "Imagine all the people living life in peace. You may say I'm a dreamer, but I'm not the only one.",
+        "Hello, it's me. I was wondering if after all these years you'd like to meet.",
+        "We all live in a yellow submarine, yellow submarine, yellow submarine."
+    ],
+    facts: [
+        "Honey never spoils. Archaeologists have tasted honey found in ancient Egyptian tombs and it was still edible.",
+        "Octopuses have three hearts and blue blood, which helps them survive in cold ocean depths.",
+        "Bananas are berries, but strawberries are not. Botanically, bananas develop from a single ovary."
+    ]
+};
+
+let currentCategory = "quotes";
+let samples = sampleCategories[currentCategory];
+let random = Math.floor(Math.random() * samples.length);
+
+function escapeHtml(text) {
+    return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function getCommonPrefixLength(a, b) {
+    const length = Math.min(a.length, b.length);
+    let i = 0;
+    while (i < length && a[i] === b[i]) {
+        i += 1;
+    }
+    return i;
+}
 
 var infinityPara = "In a world where information travels faster than ever before, the ability to focus, learn, and adapt has become one of the most valuable skills a person can possess. Every day presents countless opportunities to discover something new. And Be consistent unlike me :)"
 
@@ -16,11 +70,13 @@ var secondValue = 0;
 var ticktock;
 var typingStarted = false;
 
-var modifiedpara = infinityPara;
 var minusString= "";
 var mistakeCount=0;
 
 document.querySelector(".infinity-para").innerText = infinityPara;
+
+// Set the time mode paragraph text on load
+document.querySelector(".time-modes-wrapper .para-type").innerText = infinityPara;
 
 
 
@@ -153,52 +209,80 @@ var updateClock = function (time) {
     });
 
     function checkUserInput() {
-        var userInput = document 
-        .querySelector(".type-area")
-        .value.replace(minusString,"");
+        const textarea = document.querySelector(".type-area");
+        const paraTypeEl = document.querySelector(".time-modes-wrapper .para-type");
+        const rawInput = textarea.value;
+        const userInput = rawInput.slice(minusString.length);
+        const totalTyped = minusString.length + userInput.length;
 
-        if (userInput[userInput.length -1] === " ") {
+        if (!rawInput) {
+            paraTypeEl.innerText = infinityPara;
+            textarea.style.borderColor = "#A1A1AA";
+            return;
+        }
+
+        if (rawInput.endsWith(" ")) {
             handleSpace();
             return;
         }
 
+        const donePart    = infinityPara.slice(0, minusString.length);
+        const currentPart = infinityPara.slice(minusString.length, totalTyped);
+        const remaining   = infinityPara.slice(totalTyped);
 
-        let startword = modifiedpara.substr(0, modifiedpara.indexOf(" ")+ 1);
+        const common      = getCommonPrefixLength(userInput, currentPart);
 
-        if (document.querySelector(".type-area").value == "") {
-            document.querySelector(".para-type").innerText = infinityPara;
-        } else if (startword.includes(userInput)) {
-            text = modifiedpara;
-            text = text.replace(
-                userInput,
-                `<span class="highlight">`+ userInput + "</span>"
-            );
-            document.querySelector(".para-type").innerHTML = text;
+        if (common === userInput.length) {
+            // Everything typed so far is correct
+            paraTypeEl.innerHTML =
+                `<span class="highlight">${escapeHtml(donePart)}</span>` +
+                `<span class="highlight">${escapeHtml(currentPart)}</span>` +
+                escapeHtml(remaining);
+            textarea.style.borderColor = "#F97316";
         } else {
-            return;
+            // Some characters are wrong — show correct prefix green, wrong section red
+            // but always use the ORIGINAL paragraph characters, never the typed ones
+            const correctPart = infinityPara.slice(minusString.length, minusString.length + common);
+            const wrongPart   = infinityPara.slice(minusString.length + common, totalTyped);
+
+            paraTypeEl.innerHTML =
+                `<span class="highlight">${escapeHtml(donePart)}</span>` +
+                `<span class="highlight">${escapeHtml(correctPart)}</span>` +
+                `<span class="highlight-wrong">${escapeHtml(wrongPart)}</span>` +
+                escapeHtml(remaining);
+            textarea.style.borderColor = "#DC2626";
         }
     }
 
-    document.querySelector(".type-area").addEventListener("input",checkUserInput);
+    document.querySelector(".type-area").addEventListener("input", checkUserInput);
 
     function handleSpace() {
-        var userType = document.querySelector(".type-area").value;
-        var deleteData = userType.replace(minusString, "");
-        let startword = modifiedpara.substr(0, modifiedpara.indexOf(" ") + 1);
+        const textarea   = document.querySelector(".type-area");
+        const paraTypeEl = document.querySelector(".time-modes-wrapper .para-type");
+        const rawInput   = textarea.value;
+        const userInput  = rawInput.slice(minusString.length); // e.g. "hello "
+        const trimmed    = userInput.trim();                   // e.g. "hello"
 
-        if (startword == deleteData) {
-            modifiedpara = modifiedpara.replace(deleteData,"");
-            document.querySelector(".para-type").innerHTML = modifiedpara;
-            minusString = userType;
-        } else if (startword != deleteData && userType != deleteData) {
-            document.querySelector(".error-bundle").innerHTML = document.querySelector(".error-bundle").innerHTML
-            + `<span class="error-word">${deleteData}</span>`;
-            document.querySelector(".type-area").value = minusString;
-            mistakeCount += 1;
-            modifiedpara.replace([`<span class="highlight">` + deleteData + `</span>`],"");
-            document.querySelector(".para-type").innerHTML = modifiedpara;
+        // What the paragraph expects at this position
+        const expectedText = infinityPara.slice(minusString.length, minusString.length + userInput.length);
+
+        if (expectedText === userInput) {
+            // Correct — advance minusString
+            minusString = rawInput;
+            textarea.value = minusString;
+            const done      = infinityPara.slice(0, minusString.length);
+            const rest      = infinityPara.slice(minusString.length);
+            paraTypeEl.innerHTML = `<span class="highlight">${escapeHtml(done)}</span>${escapeHtml(rest)}`;
+            textarea.style.borderColor = "#A1A1AA";
         } else {
-            document.querySelector(".type-area").value = minusString;
+            // Wrong word — put it in error bin, reset to last good position
+            document.querySelector(".error-bundle").innerHTML += `<span class="error-word">${escapeHtml(trimmed)}</span>`;
+            textarea.value = minusString;
+            mistakeCount += 1;
+            const done = infinityPara.slice(0, minusString.length);
+            const rest = infinityPara.slice(minusString.length);
+            paraTypeEl.innerHTML = `<span class="highlight">${escapeHtml(done)}</span>${escapeHtml(rest)}`;
+            textarea.style.borderColor = "#DC2626";
         }
     }
 
@@ -308,7 +392,6 @@ function setDefault() {
     document.querySelector(".time-modes-wrapper").querySelector(".type-area").disabled = false;
     document.querySelector(".type-here-div").style.visibility = "visible";
     document.querySelector(".error-div").querySelector(".error").innerText = "";
-    modifiedpara = infinityPara;
     minusString = "";
     typingStarted = false;
     reset();
@@ -318,7 +401,7 @@ function resetTimeMode() {
     typingStarted = false;
     clearInterval(ticktock);
     document.querySelector(".type-here-div").style.visibility = "visible";
-    document.querySelector(".para-type").innerHTML = infinityPara;
+    document.querySelector(".time-modes-wrapper").querySelector(".para-type").innerHTML = infinityPara;
 
 
     var textarea = document.querySelector(".type-area");
@@ -339,8 +422,8 @@ function resetTimeMode() {
     document.querySelector("#timer-wpm").innerText = "0";
     document.querySelector("#timer-cpm").innerText = "0";
     document.querySelector("#timer-accuracy").innerText = "0";
+    document.querySelector(".error-bundle").innerHTML = "";
 
-    modifiedpara = infinityPara;
     minusString = "";
     mistakeCount = 0;
 }
@@ -353,11 +436,10 @@ var min = 0;
 var sec = 0;
 var clocking;
 var totalCharslnf = 0;
-
-
-
-var random = Math.floor(Math.random () *5 + 1) - 1;
 document.querySelector(".infinity-user-type").innerText = samples[random];
+
+// Script is at bottom of body so DOM is ready - initialize samples list now
+renderSamples();
 
 
 document.querySelector("#infinity-mode-btn").addEventListener("click",() => {
@@ -368,19 +450,27 @@ document.querySelector("#infinity-mode-btn").addEventListener("click",() => {
 function renderSamples() {
     const sampleList = document.querySelector("#samples-list");
     if (!sampleList) return;
+    if (!samples || samples.length === 0) {
+        sampleList.innerHTML = `<div class="no-samples-message">No samples available for this category.</div>`;
+        return;
+    }
     sampleList.innerHTML = samples
         .map((text, index) => {
             const preview = text.length > 100 ? text.slice(0, 100) + "..." : text;
-            return `<button type="button" class="sample-item btn" data-index="${index}">${preview}</button>`;
+            return `<button type="button" class="sample-item btn" data-index="${index}">${escapeHtml(preview)}</button>`;
         })
         .join("");
 }
 
 function selectSample(index) {
-    if (index < 0 || index >= samples.length) return;
+    if (!samples || index < 0 || index >= samples.length) return;
     random = index;
     document.querySelector(".infinity-user-type").innerText = samples[random];
     reset();
+    const typableArea = document.querySelector(".infinity-type-area");
+    if (typableArea) {
+        typableArea.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
 }
 
 function showSamples() {
@@ -421,11 +511,20 @@ categoryTabs.forEach((tab) => {
         categoryTabs.forEach((t) => t.classList.remove("active"));
         event.currentTarget.classList.add("active");
         const category = event.currentTarget.dataset.category;
+        currentCategory = category;
         if (category === "custom") {
             showCustomInput();
+            samples = [];
+            random = 0;
+            document.querySelector(".infinity-user-type").innerText = "";
+            reset();
         } else {
+            samples = sampleCategories[category] || [];
+            random = 0;
             renderSamples();
             showSamples();
+            document.querySelector(".infinity-user-type").innerText = samples[random] || "";
+            reset();
         }
     });
 });
@@ -442,10 +541,18 @@ if (customSubmitBtn) {
             alert("Please enter at least 20 characters.");
             return;
         }
-        samples.push(customText);
-        random = samples.length - 1;
+        currentCategory = "custom";
+        samples = [customText];
+        random = 0;
         document.querySelector(".infinity-user-type").innerText = customText;
+        showCustomInput();
         reset();
+
+        const typingArea = document.querySelector(".infinity-type-area");
+        if (typingArea) {
+            typingArea.scrollIntoView({ behavior: "smooth", block: "center" });
+            typingArea.focus();
+        }
     });
 }
 
@@ -512,40 +619,37 @@ function checkUserInputInfinity() {
         document.querySelector(".infinity-user-type").innerText = samples[random];
     } else if (para == userInput) {
         document.querySelector(".infinity-type-area").style.borderColor = "#16A34A";
-        text = samples[random];
         clearInterval(clocking);
-        text = text.replace(
-            userInput, '<span class="highlight-final">' + userInput + "</span>" 
-        );
-        document.querySelector(".infinity-user-type").innerHTML = text;
+        document.querySelector(".infinity-user-type").innerHTML = `<span class="highlight-final">${escapeHtml(userInput)}</span>`;
         document.querySelector(".infinity-type-area").disabled = true;
 
         document.querySelector(".showbox").style.visibility = "visible";
-        let myPromise = new Promise(function (myResolve, myReject) {
+        let myPromise = new Promise(function (myResolve) {
             setTimeout(function () {
                 myResolve(clearLoader);
             }, 5000);
         });
-        myPromise.then((result) => {
+        myPromise.then(() => {
             clearLoader();
         });
 
         document.querySelector("#infinity-mode").scrollIntoView();
         result();
-    } else if (para.includes(userInput)) {
+    } else if (para.startsWith(userInput)) {
         document.querySelector(".infinity-type-area").style.borderColor = "#F97316";
-        text = samples[random];
-        text = text.replace(
-            userInput, '<span class="highlight">' + userInput + "</span>"
-        );
-        document.querySelector(".infinity-user-type").innerHTML = text;
+        const remainder = para.slice(userInput.length);
+        document.querySelector(".infinity-user-type").innerHTML = `<span class="highlight">${escapeHtml(userInput)}</span>${escapeHtml(remainder)}`;
     } else {
-        // Error - turn border red
-        if (
-            document.querySelector(".infinity-type-area").style.borderColor == "#EA580C") {
-                mistakeCount += 1;
-            }
-            document.querySelector(".infinity-type-area").style.borderColor = "#DC2626";
+        // Check if there's a common prefix
+        const commonLength = getCommonPrefixLength(userInput, para);
+        const correctPart = para.slice(0, commonLength);
+        const wrongPart   = para.slice(commonLength, userInput.length);
+        const remainder   = para.slice(userInput.length);
+        document.querySelector(".infinity-user-type").innerHTML =
+            `<span class="highlight">${escapeHtml(correctPart)}</span>` +
+            `<span class="highlight-wrong">${escapeHtml(wrongPart)}</span>` +
+            escapeHtml(remainder);
+        document.querySelector(".infinity-type-area").style.borderColor = "#DC2626";
     }
 }
 
@@ -556,7 +660,7 @@ document.querySelector(".infinity-type-area").addEventListener("input",checkUser
 function result () {
     var totalTime = parseInt(min) + parseInt(sec)/60;
     if (totalTime <= 0) {
-        totalTime = 1/60; // prevent division by zero for very fast completions
+        totalTime = 1/60;
     }
     var wpm = calculateWPM(samples[random],totalTime).toFixed(2);
     var cpm = calculateCPM(totalCharslnf, totalTime).toFixed(2);
@@ -565,6 +669,4 @@ function result () {
     document.querySelector("#timer-wpm-inf").innerText = wpm;
     document.querySelector("#timer-cpm-inf").innerText = cpm;
     document.querySelector("#timer-accuracy-inf").innerText = accuracy;
-    document.querySelector(".infinity-mode-section .result p").innerText = `Results ready! WPM: ${wpm}, CPM: ${cpm}, Accuracy: ${accuracy}%`;
 }
-

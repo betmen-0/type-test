@@ -392,6 +392,22 @@ a{
     box-shadow: rgba(0,0,0,0.24) 0px 3px 8px;
 }
 
+.highlight {
+    color: #16a34a;
+    font-weight: 600;
+}
+
+.highlight-wrong {
+    color: #dc2626;
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.highlight-final {
+    color: #16a34a;
+    font-weight: 700;
+}
+
 .type-area , .timer , .user-type {
     display: block;
     max-width: 900px;
@@ -1080,4 +1096,3 @@ footer {
         font-size: 14px;
     }
 }
-
